@@ -1,0 +1,24 @@
+{% extends "reminders/base_user.html" %}
+{% block page %}
+<h3>You</h3>
+<form action="" method="post">
+{% csrf_token %}
+{{form.as_p}}
+
+<!-- <label for="name">Name:</label>
+<input id="name" type="text" value="{{user.name}}" />
+<br />
+
+<label for="email">Email:</label>
+<input id="email" type="email" value="{{user.email}}" />
+<br />
+
+<label for="phone">Phone #:</label>
+<input id="phone" type="text" value="{{user.phone}}" />
+<br /> -->
+
+<input type="submit" value="Save" />
+</form>
+
+
+{% endblock page %}

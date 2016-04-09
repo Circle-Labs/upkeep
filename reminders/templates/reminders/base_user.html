@@ -1,0 +1,14 @@
+{% extends "reminders/base.html" %}
+
+{% block content %}
+
+<h2>Hello {{person.name}}</h2>
+
+<a href="{% url 'me' person.id %}">Me</a>
+<a href="{% url 'contacts' person.id %}">Contacts</a>
+
+{% block page %}
+{% endblock page %}
+
+
+{% endblock content %}

@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.urlresolvers import reverse
 from django.core.validators import RegexValidator
 from django.db import models
 
@@ -18,6 +19,9 @@ class Person(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	def get_absolute_url(self):
+		return reverse('me', kwargs={'pk': self.pk})
 
 
 class Contact(models.Model):

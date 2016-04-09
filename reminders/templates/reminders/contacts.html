@@ -1,0 +1,17 @@
+{% extends "reminders/base_user.html" %}
+{% block page %}
+<h3>Add a contact</h3>
+
+	<form action="" method="POST">
+	{% csrf_token %}
+	{{form.as_p}}
+	<input type="submit" value="Add" />
+	</form>
+
+<h3>Your contacts</h3>
+<ul>
+{% for contact in contacts %}
+	<li>{{contact.name}}</li>
+{% endfor %}
+</ul>
+{% endblock page %}
