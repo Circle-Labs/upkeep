@@ -1,16 +1,23 @@
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
-
+from django.http import HttpResponseRedirect
 import datetime
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 
 from reminders.models import Person, Contact
 from rest_framework import viewsets
 from reminders.serializers import PersonSerializer, ContactSerializer
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from reminders.forms import AddContactForm
+from reminders.forms import AddContactForm, UpdateUserForm, CreateUserForm, CreatePersonForm
 
-# Create your views here.
+from reminders import utils
+
+# ----------------------------
+# API View Sets
+# ----------------------------
+
 
 class PersonViewSet(viewsets.ModelViewSet):
     """
@@ -27,16 +34,106 @@ class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
 
 
+# ----------------------------
+# Authentication Related Views
+# ----------------------------
 
-def yourContacts(request, pk):
-    user = get_object_or_404(Person, pk=pk)
+# Will logout any logined users or send them to the login page
+@login_required
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('user_login'))
+
+# Will send a sms code to any existing user
+# TODO: add fail page if number is not in DB
+# TODO: send sms code
+def verification_view(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('contacts'))
+
+    if request.method == 'POST':
+        person = Person.objects.get(phone=request.POST['phone'])
+        code = utils.generate_sms_code()
+        person.sms_verify_code = code
+
+        # TODO: replace with send code
+        print(code)
+
+        person.save()
+        url = reverse('user_verify_code', kwargs={'number':request.POST['phone']})
+        return HttpResponseRedirect(url)
+    
+    return render(request, 'reminders/send_code_form.html', {})
+
+# Takes a supplied number and verification code and attempts to authenticate user
+def login_view(request, number):
+
+    if request.user.is_authenticated():
+        return HttpResponseRedirect(reverse('contacts'))
+
+    if request.method == 'POST':
+        person = Person.objects.get(phone=request.POST['phone'])
+        user = authenticate(phone=request.POST['phone'], code=request.POST['verify_code'])
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('contacts'))
+            else:
+                print('not active')
+        else:
+            print('invalid login')
+
+    context = {'number':number}
+
+    return render(request, 'reminders/login_form.html', context)
+
+
+
+# ----------------------------
+# New Account Views
+# ----------------------------
+
+# Creates new person
+def create_person(request):
+    user = request.user
+
+    if request.method == 'POST':
+        user_form = CreateUserForm(request.POST)
+        person_form = CreatePersonForm(request.POST)
+
+        if all((user_form.is_valid(), person_form.is_valid())):
+            user = user_form.save()
+            person = person_form.save(commit=False)
+            person.user = user
+            person.sms_verify_code = 1
+            person.save()
+            user = authenticate(phone=person.phone, code=1)
+            login(request, user)
+            return HttpResponseRedirect(reverse('contacts'))
+    else:
+        user_form = CreateUserForm()
+        person_form = CreatePersonForm()
+
+    context = {'user_form':user_form, 'person_form':person_form}
+    return render(request, 'reminders/create_person_form.html', context)
+
+
+# ----------------------------
+# Account Edit Views
+# ----------------------------
+
+
+@login_required
+def your_contacts(request):
+    user = request.user.person
     
     if request.method == 'POST':
         form = AddContactForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data)
             data = form.cleaned_data
-            contact = Contact(name=data['name'], phone=data['phone'], nextReminder=datetime.date.today, frequency=datetime.timedelta(days=4))
+            # TODO: fix this
+            contact = Contact(name=data['name'], phone=data['phone'], nextReminder="2016-04-10", frequency=datetime.timedelta(days=4))
             contact.save()
             user.contact_set.add(contact)
             form=AddContactForm()
@@ -49,28 +146,30 @@ def yourContacts(request, pk):
     context = {'contacts': contacts, 'person': user, 'form':form}
     return render(request, 'reminders/contacts.html', context)
 
+@login_required
+def update_person(request):
+    user = request.user.person
 
-def me(request, pk):
-    user = get_object_or_404(Person, pk=pk)
-    context = {'person': user}
-    return render(request, 'reminders/me.html', context)
+    if request.method == 'POST':
+        form = UpdateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('me'))
+    else:
+        form = UpdateUserForm(instance=user)
 
-def update(request):
-    return ""
+    return render(request, 'reminders/person_form.html', {'person_form': form})
 
-class PersonUpdate(UpdateView):
-    model = Person
-    fields = ['name', 'email', 'phone']
 
-class PersonCreate(CreateView):
-    model = Person
-    fields = ['name', 'email', 'phone']
-    template_name = 'reminders/create_person_form.html'
+# class PersonCreate(CreateView):
+#     form_class = UpdateUserForm
+#     fields = ['name', 'email', 'phone']
+#     template_name = 'reminders/create_person_form.html'
     
-    def get_success_url(self):
-        return reverse('contacts', kwargs={
-            'pk': self.object.pk,
-        })
+#     def get_success_url(self):
+#         return reverse('contacts', kwargs={
+#             'pk': self.object.pk,
+#         })
 
 # def addContact(request, pk):
 #     user = get_object_or_404(Person, pk=pk)

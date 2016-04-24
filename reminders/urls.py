@@ -7,9 +7,12 @@ router.register(r'people', views.PersonViewSet)
 router.register(r'contacts', views.ContactViewSet)
 
 urlpatterns = [
+	
+	url(r'^user/create/$', views.create_person, name='create'),
+	url(r'^user/me/$', views.update_person, name='me'),
+	url(r'^user/contacts/$', views.your_contacts, name='contacts'),
+	url(r'^user/logout/$', views.logout_view, name='user_logout'),
+	url(r'^user/login/$', views.verification_view, name='user_login'),
+	url(r'^user/login/(?P<number>[0-9]+)/$', views.login_view, name='user_verify_code'),
 	url(r'^api/', include(router.urls)),
-	url(r'^user/create/$', views.PersonCreate.as_view(), name='create'),
-	url(r'^user/(?P<pk>[0-9]+)/me/$', views.PersonUpdate.as_view(), name='me'),
-	url(r'^user/(?P<pk>[0-9]+)/me/update/$', views.update, name='update'),
-	url(r'^user/(?P<pk>[0-9]+)/contacts/$', views.yourContacts, name='contacts'),
 ]

@@ -1,5 +1,6 @@
 from django import forms
-from reminders.models import Contact
+from reminders.models import Contact, Person
+from django.contrib.auth.models import User
 
 DAY_CHOICES = (
 	('M', 'Monday'),
@@ -16,3 +17,18 @@ class AddContactForm(forms.ModelForm):
 	class Meta:
 		model = Contact
 		fields = ['name', 'phone']
+
+class UpdateUserForm(forms.ModelForm):
+	class Meta:
+		model = Person
+		fields = ('phone', )
+
+class CreateUserForm(forms.ModelForm):
+	class Meta:
+		model = User
+		fields = ['username', 'email']
+
+class CreatePersonForm(forms.ModelForm):
+	class Meta:
+		model = Person
+		fields = ['phone']

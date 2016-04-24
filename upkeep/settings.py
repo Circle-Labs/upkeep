@@ -70,6 +70,13 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'reminders.auth_backend.SMSAuthBackend',
+)
+
+LOGIN_URL = '/user/login/'
+
 WSGI_APPLICATION = 'upkeep.wsgi.application'
 
 

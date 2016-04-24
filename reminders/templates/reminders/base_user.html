@@ -4,8 +4,9 @@
 
 <h2>Hello {{person.name}}</h2>
 
-<a href="{% url 'me' person.id %}">Me</a>
-<a href="{% url 'contacts' person.id %}">Contacts</a>
+<a href="{% url 'me' %}">Me</a>
+<a href="{% url 'contacts'%}">Contacts</a>
+<a href="{% url 'user_logout' %}">Logout</a>
 
 {% block page %}
 {% endblock page %}

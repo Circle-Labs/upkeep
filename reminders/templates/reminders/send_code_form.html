@@ -1,0 +1,15 @@
+{% extends "reminders/base.html" %}
+{% block content %}
+<h3>You</h3>
+<form action="" method="post">
+{% csrf_token %}
+
+<label for="phone">Phone #:</label>
+<input id="phone" name="phone" type="text"/>
+<br />
+
+<input type="submit" value="Send Code" />
+</form>
+
+
+{% endblock content %}
