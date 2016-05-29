@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-import datetime
+from datetime import timedelta
+from datetime import datetime
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
@@ -46,7 +48,6 @@ def logout_view(request):
 
 # Will send a sms code to any existing user
 # TODO: add fail page if number is not in DB
-# TODO: send sms code
 def verification_view(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect(reverse('contacts'))
@@ -102,7 +103,11 @@ def create_person(request):
         person_form = CreatePersonForm(request.POST)
 
         if all((user_form.is_valid(), person_form.is_valid())):
-            user = user_form.save()
+            print(user_form.cleaned_data)
+            print(user.username)
+            user = user_form.save(commit=False)
+            user.username = user_form.cleaned_data['first_name'].lower() + user_form.cleaned_data['last_name'].lower()
+            user.save()
             person = person_form.save(commit=False)
             person.user = user
             person.sms_verify_code = 1
@@ -131,9 +136,17 @@ def your_contacts(request):
         form = AddContactForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data)
-            data = form.cleaned_data
-            # TODO: fix this
-            contact = Contact(name=data['name'], phone=data['phone'], nextReminder="2016-04-10", frequency=datetime.timedelta(days=4))
+            data = form.cleaned_data 
+
+            now = timezone.localtime(timezone.now())
+            res = int(data['update_day']) - now.weekday()
+            if res <= 0:
+                res += 7
+            dif = timedelta(days=res)
+            new = now + dif
+            new = new.replace(hour=data['update_time'].hour, minute=data['update_time'].minute, second=0, microsecond=0)
+
+            contact = Contact(name=data['name'], phone=data['phone'], next_reminder=new, frequency=timedelta(weeks=1))
             contact.save()
             user.contact_set.add(contact)
             form=AddContactForm()
@@ -145,6 +158,14 @@ def your_contacts(request):
 
     context = {'contacts': contacts, 'person': user, 'form':form}
     return render(request, 'reminders/contacts.html', context)
+
+@login_required
+def declaim_contact(request, contact):
+    user = request.user.person
+    contact = Contact.objects.get(id=contact)
+    user.contact_set.remove(contact)
+    contact.delete()
+    return HttpResponseRedirect(reverse('contacts'))
 
 @login_required
 def update_person(request):
