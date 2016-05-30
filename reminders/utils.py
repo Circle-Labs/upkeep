@@ -31,7 +31,9 @@ def check_reminders():
 	for contact in contacts:
 		dif = contact.next_reminder - now - duration
 		if dif <= timedelta():
-			send_contact_reminder(contact.user_set.all()[0].phone, contact.name, contact.phone)
+			send_contact_reminder(contact.person_set.all()[0].phone, contact.name, contact.phone)
+			contact.next_reminder = contact.next_reminder + contact.frequency
+			contact.save()
 
 def populate_contacts():
 	now = timezone.now()
