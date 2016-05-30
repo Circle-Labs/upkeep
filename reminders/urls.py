@@ -15,5 +15,6 @@ urlpatterns = [
 	url(r'^user/logout/$', views.logout_view, name='user_logout'),
 	url(r'^user/login/$', views.verification_view, name='user_login'),
 	url(r'^user/login/(?P<number>[0-9]+)/$', views.login_view, name='user_verify_code'),
+	url(r'^test/$', views.test, name='test'),
 	url(r'^api/', include(router.urls)),
 ]

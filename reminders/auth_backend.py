@@ -10,6 +10,9 @@ class SMSAuthBackend(ModelBackend):
 		try:
 			person = Person.objects.get(phone=phone)
 			user = person.user
+			if (person.sms_verify_code == None):
+				print('No code')
+				return None
 			if (person.sms_verify_code == int(code)):
 				person.sms_verify_code = None
 				person.save()

@@ -16,6 +16,8 @@ from reminders.forms import AddContactForm, UpdateUserForm, CreateUserForm, Crea
 
 from reminders import utils
 
+from reminders import tasks
+
 # ----------------------------
 # API View Sets
 # ----------------------------
@@ -55,9 +57,9 @@ def verification_view(request):
     if request.method == 'POST':
         person = Person.objects.get(phone=request.POST['phone'])
         code = utils.generate_sms_code()
+        utils.send_sms_code(person.phone, code)
         person.sms_verify_code = code
 
-        # TODO: replace with send code
         print(code)
 
         person.save()
@@ -165,6 +167,11 @@ def declaim_contact(request, contact):
     contact = Contact.objects.get(id=contact)
     user.contact_set.remove(contact)
     contact.delete()
+    return HttpResponseRedirect(reverse('contacts'))
+
+def test(request):
+    utils.check_reminders()
+    print('ok')
     return HttpResponseRedirect(reverse('contacts'))
 
 @login_required
