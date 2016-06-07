@@ -18,6 +18,10 @@ from reminders import utils
 
 from reminders import tasks
 
+
+def home_view(request):
+    return render(request, 'reminders/home.html', {})
+
 # ----------------------------
 # API View Sets
 # ----------------------------
