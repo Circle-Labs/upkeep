@@ -1,19 +1,9 @@
-{% extends "reminders/base.html" %}
-{% block content %}
-<h3>Login</h3>
-<form action="" method="post">
-{% csrf_token %}
+{% extends "reminders/base_login.html" %}
+{% block page %}
 
-<label for="phone">Phone #:</label>
-<input id="phone" name="phone" type="text" value="{{number}}"/>
+<input id="sms" name="verify_code" type="text" placeholder="SMS Code" />
 <br />
 
-<label for="sms">SMS Verification Code:</label>
-<input id="sms" name="verify_code" type="text"/>
-<br />
+<input class="login-button" type="submit" value="Submit" />
 
-<input type="submit" value="Login" />
-</form>
-
-
-{% endblock content %}
+{% endblock page %}

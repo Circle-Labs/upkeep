@@ -1,0 +1,40 @@
+{% extends "reminders/base.html" %}
+{% load staticfiles %}
+{% block content %}
+
+
+<head>
+	<title>You</title>
+	<link rel="stylesheet" href="{% static "reminders/contacts.css" %}"/>
+</head>
+
+<div class="header">
+	<div class="header-center">
+		<img class="logo" src="/static/reminders/img/CLlogo.png">
+	</div>
+	<div class="header-right">
+		<a class="logout" href="{% url 'user_logout' %}">Logout</a>
+	</div>
+</div>
+
+<div class="raise">
+
+	<h3><span>Login</span>/<span><a href="{% url 'create' %}">Create</a></span></h3>
+	<div class="form">
+		<form action="" method="post">
+		{% csrf_token %}
+
+		<input id="phone" name="phone" type="text" placeholder="Phone #" />
+		<br />
+
+		{% block page %}
+		{% endblock page %}
+
+		
+		</form>
+	</div>
+
+</div>
+
+
+{% endblock content %}

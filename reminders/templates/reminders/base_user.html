@@ -1,14 +1,23 @@
 {% extends "reminders/base.html" %}
-
+{% load staticfiles %}
 {% block content %}
 
-<h2>Hello {{person.name}}</h2>
+<head>
+	<title>You</title>
+	<link rel="stylesheet" href="{% static "reminders/contacts.css" %}"/>
+</head>
 
-<a href="{% url 'contacts'%}">Contacts</a>
-<a href="{% url 'user_logout' %}">Logout</a>
+<div class="header">
+	<img class="logo" src="/static/reminders/img/CLlogo.png">
+	<a href="{% url 'user_logout' %}">Logout</a>
+</div>
 
-{% block page %}
-{% endblock page %}
+<div class="raise">
+
+	{% block page %}
+	{% endblock page %}
+
+</div>
 
 
 {% endblock content %}
