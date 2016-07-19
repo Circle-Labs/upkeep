@@ -57,7 +57,7 @@ body {
 div {
 	width: 100%;
     text-align: center;
-        margin-top: 20px;
+    margin-top: 10px;
 }
 
 section {
@@ -102,4 +102,12 @@ button {
     height: 120px;
     position: relative;
     top: 10px;
+}
+
+.icons.fa {
+    font-size: 8em;
+    color: white;
+    text-align: center;
+    display: block;
+    margin-bottom: 10px;
 }

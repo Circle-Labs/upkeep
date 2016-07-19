@@ -28,7 +28,19 @@ class CreateUserForm(forms.ModelForm):
 		model = User
 		fields = ['first_name','last_name', 'email']
 
+	def clean_email(self):
+		email = self.cleaned_data.get('email')
+		if email and User.objects.filter(email=email).count():
+			raise forms.ValidationError(u'Someone has already used this email address!')
+		return email
+
 class CreatePersonForm(forms.ModelForm):
 	class Meta:
 		model = Person
 		fields = ['phone']
+
+	def clean_phone(self):
+		phone = self.cleaned_data.get('phone')
+		if phone and Person.objects.filter(phone=phone).count():
+			raise forms.ValidationError(u'Someone has already registered this number!')
+		return phone

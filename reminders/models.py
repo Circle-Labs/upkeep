@@ -12,8 +12,9 @@ PHONE_REGEX='^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$'
 
 
 class Person(models.Model):
+	# person's name creates their username
 	user = models.OneToOneField(User, blank=True, on_delete=models.CASCADE)
-	phone = models.CharField(max_length=100, validators=[RegexValidator(regex=PHONE_REGEX)])
+	phone = models.CharField(max_length=100, validators=[RegexValidator(regex=PHONE_REGEX)], unique=True)
 	sms_verify_code = models.IntegerField(blank=True, null=True)
 	contacts = models.ManyToManyField('Contact', blank=True)
 

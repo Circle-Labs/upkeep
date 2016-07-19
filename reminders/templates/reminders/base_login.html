@@ -12,9 +12,6 @@
 	<div class="header-center">
 		<img class="logo" src="/static/reminders/img/CLlogo.png">
 	</div>
-	<div class="header-right">
-		<a class="logout" href="{% url 'user_logout' %}">Logout</a>
-	</div>
 </div>
 
 <div class="raise">
@@ -24,7 +21,7 @@
 		<form action="" method="post">
 		{% csrf_token %}
 
-		<input id="phone" name="phone" type="text" placeholder="Phone #" />
+		<input id="phone" name="phone" type="text" placeholder="Phone #" value="{{number}}" />
 		<br />
 
 		{% block page %}

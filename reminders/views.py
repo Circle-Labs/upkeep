@@ -61,16 +61,15 @@ def verification_view(request):
     if request.method == 'POST':
         person = Person.objects.get(phone=request.POST['phone'])
         code = utils.generate_sms_code()
-        utils.send_sms_code(person.phone, code)
         person.sms_verify_code = code
-
         print(code)
-
         person.save()
+        utils.send_sms_code(person.phone, code)
+
         url = reverse('user_verify_code', kwargs={'number':request.POST['phone']})
         return HttpResponseRedirect(url)
-    
-    return render(request, 'reminders/send_code_form.html', {})
+    context = {'number':''} 
+    return render(request, 'reminders/send_code_form.html', context)
 
 # Takes a supplied number and verification code and attempts to authenticate user
 def login_view(request, number):
@@ -101,6 +100,7 @@ def login_view(request, number):
 # ----------------------------
 
 # Creates new person
+# TODO: should redirect to verification page
 def create_person(request):
     user = request.user
 
@@ -109,18 +109,20 @@ def create_person(request):
         person_form = CreatePersonForm(request.POST)
 
         if all((user_form.is_valid(), person_form.is_valid())):
-            print(user_form.cleaned_data)
-            print(user.username)
             user = user_form.save(commit=False)
+            user.first_name=user_form.cleaned_data['first_name']
+            user.last_name=user_form.cleaned_data['last_name']
             user.username = user_form.cleaned_data['first_name'].lower() + user_form.cleaned_data['last_name'].lower()
             user.save()
             person = person_form.save(commit=False)
             person.user = user
-            person.sms_verify_code = 1
+
+            code = utils.generate_sms_code()
+            person.sms_verify_code = code
+            
             person.save()
-            user = authenticate(phone=person.phone, code=1)
-            login(request, user)
-            return HttpResponseRedirect(reverse('contacts'))
+            utils.send_sms_code(person.phone, code)
+            return HttpResponseRedirect(reverse('user_verify_code', kwargs={'number': person.phone}))
     else:
         user_form = CreateUserForm()
         person_form = CreatePersonForm()

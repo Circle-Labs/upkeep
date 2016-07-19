@@ -8,8 +8,12 @@
 </head>
 
 <div class="header">
-	<img class="logo" src="/static/reminders/img/CLlogo.png">
-	<a href="{% url 'user_logout' %}">Logout</a>
+	<div class="header-center">
+		<img class="logo" src="/static/reminders/img/CLlogo.png">
+	</div>
+	<div class="header-right">
+		<a class="logout" href="{% url 'user_logout' %}">Logout</a>
+	</div>
 </div>
 
 <div class="raise">
