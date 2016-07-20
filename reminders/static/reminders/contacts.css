@@ -15,12 +15,15 @@
 }
 
 .raise {
-    background-color: #f3f3f3;
     font-family: "Open Sans Semibold", sans-serif;
     font-size: 1.2em;
     text-align: left;
-    margin: 20px 50px;
     padding: 5px;
+    width: 75%;
+    margin: auto;
+    height: 91vh;
+    background: #fff;
+    max-width: 900px;
 }
 
 h3 {
@@ -36,6 +39,13 @@ input {
     padding-left: 5px;
 }
 
+.submit {
+    background-color: #04536d;
+    color: #fff;
+    border-radius: 8px;
+    width: 90px;
+}
+
 ul {
     list-style: none;
     padding: 0px 40px;
@@ -47,7 +57,7 @@ li {
 }
 
 body {
-	background-color: #076281;
+	background-color: #023F53;
 	margin: 0px;
 }
 
@@ -63,7 +73,7 @@ body {
 
 .contact-delete button {
     color: white;
-    background: red;
+    background: #d62403;
     border: none;
     font-size: .9em;
     border-radius: 5px;
@@ -73,8 +83,8 @@ body {
 
 .header {
 	width: 100%;
-    height: 70px;
-    background-color: white;
+    height: 8vh;
+    background-color: #1D7C9B;
     margin-top: 0px;
     text-align: center;
 }
@@ -97,7 +107,7 @@ body {
 }
 
 .logout {
-    color: black;
+    color: #fff;
     font-family: "Open Sans Semibold";
     font-weight: bolder;
     font-size: 2em;
