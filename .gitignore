@@ -3,5 +3,5 @@ db.sqlite3
 *.pyc
 reminders/keys.py
 celerybeat-schedule
-
+static
 *.log
