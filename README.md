@@ -28,6 +28,8 @@ Commands
 virtualenv venv
 . ven/bin/activate
 pip install -r requirments.txt
+mkdir log
+mkdir static
 cp keys.py to reminders/
 python manage.py migrate
 python manage.py createsuperuser
