@@ -18,6 +18,6 @@ urlpatterns = [
 	url(r'^beta/confirm/$', views.beta_confirm, name='beta_confirm'),
 	url(r'^user/login/(?P<number>[0-9]+)/$', views.login_view, name='user_verify_code'),
 	url(r'^test/$', views.test, name='test'),
-	url(r'^api/', include(router.urls)),
+	# url(r'^api/', include(router.urls)),
 	url(r'^$', views.home_view, name='home'),
 ]

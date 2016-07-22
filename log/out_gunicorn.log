@@ -1,0 +1,7 @@
+[2016-07-22 00:34:30 +0000] [27334] [INFO] Starting gunicorn 19.6.0
+[2016-07-22 00:34:30 +0000] [27334] [INFO] Listening at: http://127.0.0.1:8000 (27334)
+[2016-07-22 00:34:30 +0000] [27334] [INFO] Using worker: sync
+[2016-07-22 00:34:30 +0000] [27339] [INFO] Booting worker with pid: 27339
+Not Found: /static/reminders/main.css
+Not Found: /static/reminders/fonts/font-awesome/css/font-awesome.min.css
+Not Found: /static/reminders/img/CLlogo.png
