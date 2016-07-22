@@ -29,6 +29,8 @@ virtualenv venv
 . ven/bin/activate
 pip install -r requirments.txt
 cp keys.py to reminders/
+python manage.py migrate
+python manage.py createsuperuser
 supervisord
 supervisorctl
 >status
