@@ -1,3 +1,14 @@
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+  }
+
 @font-face {
   font-family: "Neutra Text Book";
   src: url("/static/reminders/fonts/NeutraText-Book.otf");
@@ -25,6 +36,90 @@ h1 {
     font-family: "Neutra Text Book", sans-serif;
     font-weight: 100;
 }
+
+/* BETA */
+
+h2 {
+    color: #FFCD56;
+    font-size: 6em;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: "Neutra Text Book", sans-serif;
+    font-weight: 100;
+}
+
+h3 {
+    color: #FFCD56;
+    font-size: 2em;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: "Neutra Text Book", sans-serif;
+    font-weight: 100;
+}
+
+h4 {
+    color: #FFCD56;
+    font-size: 2em;
+    margin-top: 280px;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: "Neutra Text Book", sans-serif;
+    font-weight: 100;
+}
+
+.beta-share {
+    height: auto;
+    font-size: 1em;
+}
+
+.beta-email {
+    font-size: 3em;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #FFCD56;
+    color: #FFCD56;
+    outline: none;
+    font-family: "Neutra Text Book", sans-serif;
+    margin-top: 25px;
+}
+
+.beta-email::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #FFCD56;
+  font-family: "Neutra Text Book", sans-serif;
+}
+.beta-email::-moz-placeholder { /* Firefox 19+ */
+  color: #FFCD56;
+  font-family: "Neutra Text Book", sans-serif;
+}
+.beta-email:-ms-input-placeholder { /* IE 10+ */
+  color: #FFCD56;
+  font-family: "Neutra Text Book", sans-serif;
+}
+.beta-email:-moz-placeholder { /* Firefox 18- */
+  color: #FFCD56;
+  font-family: "Neutra Text Book", sans-serif;
+}
+
+.beta-ok {
+    background: #FFCD56;
+    border: none;
+    border-radius: 10px;
+    font-size: 2em;
+    color: #076686;
+    font-family: "Open Sans Semibold", sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/*END BETA*/
 
 ul {
 	list-style: none;

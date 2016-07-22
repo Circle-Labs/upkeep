@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
-from reminders.models import Person, Contact
+from reminders.models import Person, Contact, Beta
 from rest_framework import viewsets
 from reminders.serializers import PersonSerializer, ContactSerializer
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -17,6 +17,8 @@ from reminders.forms import AddContactForm, UpdateUserForm, CreateUserForm, Crea
 from reminders import utils
 
 from reminders import tasks
+
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def home_view(request):
@@ -42,6 +44,27 @@ class ContactViewSet(viewsets.ModelViewSet):
     serializer_class = ContactSerializer
 
 
+
+# ----------------------------
+# Beta Related Views
+# ----------------------------
+
+def beta_reg(request):
+    context = {}
+    if request.method == 'POST':
+        email = request.POST['email']
+        beta = Beta()
+        beta.email = email
+        beta.save()
+        return HttpResponseRedirect(reverse('beta_confirm'))
+
+    
+    return render(request, 'reminders/beta.html', context)
+
+def beta_confirm(request):
+    context = {}
+    return render(request, 'reminders/beta-confirm.html', context)
+
 # ----------------------------
 # Authentication Related Views
 # ----------------------------
@@ -59,7 +82,11 @@ def verification_view(request):
         return HttpResponseRedirect(reverse('contacts'))
 
     if request.method == 'POST':
-        person = Person.objects.get(phone=request.POST['phone'])
+        try:
+            person = Person.objects.get(phone=request.POST['phone'])
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('user_login'))
+
         code = utils.generate_sms_code()
         person.sms_verify_code = code
         print(code)
@@ -78,7 +105,11 @@ def login_view(request, number):
         return HttpResponseRedirect(reverse('contacts'))
 
     if request.method == 'POST':
-        person = Person.objects.get(phone=request.POST['phone'])
+        try:
+            person = Person.objects.get(phone=request.POST['phone'])
+        except ObjectDoesNotExist:
+            return HttpResponseRedirect(reverse('user_verify_code'))
+            
         user = authenticate(phone=request.POST['phone'], code=request.POST['verify_code'])
         if user is not None:
             if user.is_active:
@@ -110,6 +141,13 @@ def create_person(request):
 
         if all((user_form.is_valid(), person_form.is_valid())):
             user = user_form.save(commit=False)
+            # BETA
+            try:
+                Beta.objects.get(email=user.email, approved=True)
+            except ObjectDoesNotExist:
+                return HttpResponseRedirect(reverse('beta_reg'))
+
+
             user.first_name=user_form.cleaned_data['first_name']
             user.last_name=user_form.cleaned_data['last_name']
             user.username = user_form.cleaned_data['first_name'].lower() + user_form.cleaned_data['last_name'].lower()

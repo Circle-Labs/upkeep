@@ -1,10 +1,14 @@
 from random import randint
 from twilio.rest import TwilioRestClient
+from twilio import TwilioRestException
 import keys
 
 from reminders.models import Contact, Person
 from django.utils import timezone
 from datetime import timedelta
+
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 
 def generate_sms_code():
 	return randint(10000, 99999)
@@ -14,7 +18,14 @@ client = TwilioRestClient(keys.TWILIO_ACCOUNT, keys.TWILIO_TOKEN)
 
 def send_sms(to, message):
 	format_to = '+1' + to
-	message = client.messages.create(to=format_to, from_=keys.TWILIO_NUMBER, body=message)
+	try:
+		print("start send")
+		message = client.messages.create(to=format_to, from_=keys.TWILIO_NUMBER, body=message)
+		print("end send")
+	except TwilioRestException as e:
+		print("Error")
+		print(e)
+
 	print(message.status)
 
 
