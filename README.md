@@ -20,7 +20,7 @@ Requires
 Must be in /var/apps with read/write permissions
 redis on redis://localhost:6379/0
 nginx server from nginx.conf
-virtualenv
+virtualenv installed
 ```
 
 Commands
@@ -28,8 +28,9 @@ Commands
 virtualenv venv
 . ven/bin/activate
 pip install -r requirments.txt
+cp keys.py to reminders/
 supervisord
 supervisorctl
 >status
 ```
-run nginx
+reload nginx
