@@ -8,8 +8,8 @@ server {
 
     keepalive_timeout 5;
 
-    access_log /var/apps/upkeep/log/nginx-access.log
-    error_log /var/apps/upkeep/log/nginx-error.log
+    access_log /var/apps/upkeep/log/nginx-access.log;
+    error_log /var/apps/upkeep/log/nginx-error.log;
 
     # path for static files
     root /var/apps/upkeep/;
