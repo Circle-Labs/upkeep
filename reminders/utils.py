@@ -10,17 +10,29 @@ from datetime import timedelta
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+
 def generate_sms_code():
 	return randint(10000, 99999)
 
-client = TwilioRestClient(keys.TWILIO_ACCOUNT, keys.TWILIO_TOKEN)
+client = TwilioRestClient(keys.USE_TWILIO_ACCOUNT, keys.USE_TWILIO_TOKEN)
 
+
+def send_email(to, subject, message):
+	send_mail(subject, message, "Hello <hello@upkeepme.co>", to)
+
+def send_beta_accept(to):
+	send_email(to, "Welcome!", "Hi! We are happy to have you come on board for our closed beta. You can now go to upkeepme.co/user/create and create an account with this email address.")
+
+def send_beta_acknowledge(to):
+	send_email([to], "Beta Registration", "Hi! This is just to confirm that we have registered you for updates about our closed beta. Be on the look out for more!")
 
 def send_sms(to, message):
 	format_to = '+1' + to
 	try:
 		print("start send")
-		message = client.messages.create(to=format_to, from_=keys.TWILIO_NUMBER, body=message)
+		message = client.messages.create(to=format_to, from_=keys.USE_TWILIO_NUMBER, body=message)
 		print("end send")
 	except TwilioRestException as e:
 		print("Error")

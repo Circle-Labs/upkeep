@@ -56,6 +56,7 @@ def beta_reg(request):
         beta = Beta()
         beta.email = email
         beta.save()
+        utils.send_beta_acknowledge(email)
         return HttpResponseRedirect(reverse('beta_confirm'))
 
     

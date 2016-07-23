@@ -35,13 +35,13 @@ class Contact(models.Model):
 	def __str__(self):
 		return self.name
 
+
 class Beta(models.Model):
 	email = models.EmailField()
 	approved = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.email
-
 
 
 

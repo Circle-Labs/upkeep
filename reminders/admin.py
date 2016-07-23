@@ -6,9 +6,18 @@ from django.contrib.auth.models import User
 
 from .models import Contact, Person, Beta
 
-admin.site.register(Contact)
-admin.site.register(Person)
-admin.site.register(Beta)
+import utils
+
+
+def inivite_to_beta(modeladmin, request, queryset):
+		queryset.update(approved=True)
+		emails = []
+		for obj in queryset:
+			emails.append(obj.email)
+		utils.send_beta_accept(emails)
+
+class BetaAdmin(admin.ModelAdmin):
+	actions = [inivite_to_beta]
 
 class PersonInline(admin.StackedInline):
 	model = Person
@@ -21,4 +30,6 @@ class UserAdmin(BaseUserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
-
+admin.site.register(Contact)
+admin.site.register(Person)
+admin.site.register(Beta, BetaAdmin)
