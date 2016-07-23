@@ -33,6 +33,7 @@ mkdir static
 cp keys.py to reminders/
 python manage.py migrate
 python manage.py createsuperuser
+python manage.py collectstatic
 supervisord
 supervisorctl
 >status

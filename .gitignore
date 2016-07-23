@@ -1,7 +1,8 @@
-venv
+venv/
 db.sqlite3
 *.pyc
 reminders/keys.py
 celerybeat-schedule
-static
+/static/
 *.log
+log/
