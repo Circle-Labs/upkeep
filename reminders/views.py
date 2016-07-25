@@ -19,6 +19,7 @@ from reminders import utils
 from reminders import tasks
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 
 
 def home_view(request):
@@ -55,9 +56,14 @@ def beta_reg(request):
         email = request.POST['email']
         beta = Beta()
         beta.email = email
-        beta.save()
-        utils.send_beta_acknowledge(email)
-        return HttpResponseRedirect(reverse('beta_confirm'))
+        try:
+            beta.full_clean()
+        except ValidationError as e:
+            context = {'email': email, 'error': 'Email has already been entered'}
+        else: 
+            beta.save()
+            utils.send_beta_acknowledge(email)
+            return HttpResponseRedirect(reverse('beta_confirm'))
 
     
     return render(request, 'reminders/beta.html', context)
@@ -84,7 +90,7 @@ def verification_view(request):
 
     if request.method == 'POST':
         try:
-            person = Person.objects.get(phone=request.POST['phone'])
+            person = Person.objects.get(phone=utils.parse_phone_number(request.POST['phone']))
         except ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('user_login'))
 
@@ -106,12 +112,14 @@ def login_view(request, number):
         return HttpResponseRedirect(reverse('contacts'))
 
     if request.method == 'POST':
+        parsed = ""
         try:
-            person = Person.objects.get(phone=request.POST['phone'])
+            parsed = utils.parse_phone_number(request.POST['phone'])
+            person = Person.objects.get(phone=parsed)
         except ObjectDoesNotExist:
             return HttpResponseRedirect(reverse('user_verify_code'))
             
-        user = authenticate(phone=request.POST['phone'], code=request.POST['verify_code'])
+        user = authenticate(phone=parsed, code=request.POST['verify_code'])
         if user is not None:
             if user.is_active:
                 login(request, user)
@@ -181,6 +189,7 @@ def your_contacts(request):
     
     if request.method == 'POST':
         form = AddContactForm(request.POST)
+
         if form.is_valid():
             print(form.cleaned_data)
             data = form.cleaned_data 

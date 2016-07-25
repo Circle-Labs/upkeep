@@ -1,6 +1,7 @@
 from random import randint
 from twilio.rest import TwilioRestClient
 from twilio import TwilioRestException
+import phonenumbers
 import keys
 
 from reminders.models import Contact, Person
@@ -20,7 +21,10 @@ client = TwilioRestClient(keys.USE_TWILIO_ACCOUNT, keys.USE_TWILIO_TOKEN)
 
 
 def send_email(to, subject, message):
-	send_mail(subject, message, "Hello <hello@upkeepme.co>", to)
+	if hasattr(keys, 'SENDGRID_DEBUG') and keys.SENDGRID_DEBUG:
+		print "Debug: Send email '" + subject + "'' to " + str(to) + " with message: " + message
+	else:
+		send_mail(subject, message, "Hello <hello@upkeepme.co>", to)
 
 def send_beta_accept(to):
 	send_email(to, "Welcome!", "Hi! We are happy to have you come on board for our closed beta. You can now go to upkeepme.co/user/create and create an account with this email address.")
@@ -29,10 +33,9 @@ def send_beta_acknowledge(to):
 	send_email([to], "Beta Registration", "Hi! This is just to confirm that we have registered you for updates about our closed beta. Be on the look out for more!")
 
 def send_sms(to, message):
-	format_to = '+1' + to
 	try:
 		print("start send")
-		message = client.messages.create(to=format_to, from_=keys.USE_TWILIO_NUMBER, body=message)
+		message = client.messages.create(to=to, from_=keys.USE_TWILIO_NUMBER, body=message)
 		print("end send")
 	except TwilioRestException as e:
 		print("Error")
@@ -67,3 +70,22 @@ def populate_contacts():
 		now = now + diff
 		contact.save()
 		me.contact_set.add(contact)
+
+def parse_phone_number(number):
+	print(number)
+	# parses number as dialed from US (localizes numbers with country code)
+	try:
+		x = phonenumbers.parse(number, "US")
+	except:
+		print("Phone # parsing error")
+		return "1"
+	# checks validity
+	if not phonenumbers.is_possible_number(x):
+		print("Phone # is not possible number")
+		return "1"
+	if not phonenumbers.is_valid_number(x):
+		print("Phone # is not valid number")
+		return "1"
+	# returns standarized number with forced country code
+	return phonenumbers.format_number(x, phonenumbers.PhoneNumberFormat.E164)
+	

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 import os
 from datetime import timedelta
 from reminders.keys import SENDGRID_KEY as sendgrid_key
+from reminders.keys import DJANGO_DEBUG as django_debug
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'r%8uz%ev5_b2&pgzq(4#f2+7#8@gptdir=@hufa5y5c*23njzv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = django_debug
 
 ALLOWED_HOSTS = []
 

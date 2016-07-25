@@ -66,13 +66,24 @@ h3 {
 h4 {
     color: #FFCD56;
     font-size: 2em;
-    margin-top: 280px;
+    margin-top: 50px;
     margin-bottom: 30px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     font-family: "Neutra Text Book", sans-serif;
     font-weight: 100;
+}
+
+.subline {
+    color: #FFCD56;
+    font-size: 1.5em;
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: "Open Sans Light", sans-serif;
+    font-weight: bold;
 }
 
 .beta-share {

@@ -8,13 +8,14 @@ from django.contrib.auth.models import User
 # Create your models here.
 # 
 
-PHONE_REGEX='^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$'
+US_REGEX='^(\+?0?1\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$'
+CONTACT_REGEX='^(\+?\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$'
 
 
 class Person(models.Model):
 	# person's name creates their username
 	user = models.OneToOneField(User, blank=True, on_delete=models.CASCADE)
-	phone = models.CharField(max_length=100, validators=[RegexValidator(regex=PHONE_REGEX)], unique=True)
+	phone = models.CharField(max_length=100, validators=[RegexValidator(regex=US_REGEX)], unique=True)
 	sms_verify_code = models.IntegerField(blank=True, null=True)
 	contacts = models.ManyToManyField('Contact', blank=True)
 
@@ -27,7 +28,7 @@ class Person(models.Model):
 
 class Contact(models.Model):
 	name = models.CharField(max_length=100)
-	phone = models.CharField(max_length=100, validators=[RegexValidator(regex=PHONE_REGEX)])
+	phone = models.CharField(max_length=100, validators=[RegexValidator(regex=CONTACT_REGEX)])
 	next_reminder = models.DateTimeField()
 	frequency = models.DurationField()
 	claimees = models.ManyToManyField('Person', through=Person.contacts.through, blank=True)
@@ -37,7 +38,7 @@ class Contact(models.Model):
 
 
 class Beta(models.Model):
-	email = models.EmailField()
+	email = models.EmailField(unique=True)
 	approved = models.BooleanField(default=False)
 
 	def __str__(self):

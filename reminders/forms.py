@@ -1,6 +1,7 @@
 from django import forms
 from reminders.models import Contact, Person
 from django.contrib.auth.models import User
+from reminders import utils
 
 DAY_CHOICES = (
 	(0, 'Monday'),
@@ -17,6 +18,17 @@ class AddContactForm(forms.ModelForm):
 	class Meta:
 		model = Contact
 		fields = ['name', 'phone']
+
+	def clean_phone(self):
+		phone = self.cleaned_data['phone']
+
+		parsed = utils.parse_phone_number(phone)
+		if parsed == "1":
+			self.add_error("phone", "Phone number is invalid")
+		else:
+			return parsed
+
+
 
 class UpdateUserForm(forms.ModelForm):
 	class Meta:
@@ -41,6 +53,10 @@ class CreatePersonForm(forms.ModelForm):
 
 	def clean_phone(self):
 		phone = self.cleaned_data.get('phone')
-		if phone and Person.objects.filter(phone=phone).count():
-			raise forms.ValidationError(u'Someone has already registered this number!')
-		return phone
+		parsed = utils.parse_phone_number(phone)
+		if parsed == "1":
+			self.add_error("phone", "Phone number is invalid")
+		elif Person.objects.filter(phone=parsed).count():
+			self.add_error("phone", "Someone has already registered this number!")
+		else:
+			return parsed

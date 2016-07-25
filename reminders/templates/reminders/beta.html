@@ -11,15 +11,16 @@
 
 <div class="header"><div class="circle"><img class="logo" src="/static/reminders/img/CLlogo.png"></img></div></div>
 
-<h2>Stay Informed, Be Ready</h2>
+<h2>Stay Informed, Be Invited</h2>
 
-<h3> We'll <b>keep</b> you <b>up</b> to date </h3>
+<h3> We're not ready yet, but we'll <b>keep</b> you <b>up</b> to date and invite you when we are </h3>
 
 <div>
 	<form action="" method="post">
 		{% csrf_token %}
-		<input class="beta-email" name="email" type="email" placeholder="Your email, please" />
+		<input class="beta-email" name="email" type="email" value="{{email}}" placeholder="Your email, please" />
 		<input class="beta-ok" type="submit" value="Ok" />
+		<h3 style="margin-top: 30px; font-size=1.2em;">{{ error }}</h3>
 	</form>
 </div>
 
