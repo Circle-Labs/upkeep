@@ -29,7 +29,8 @@ SECRET_KEY = 'r%8uz%ev5_b2&pgzq(4#f2+7#8@gptdir=@hufa5y5c*23njzv'
 DEBUG = django_debug
 
 ALLOWED_HOSTS = ['.upkeepme.co', '.upkeep.brentondurkee.com']
-
+ADMINS = [('Brenton Durkee', '3sjgabpewt@pomail.net')]
+MANAGERS = [('Brenton Durkee', '3sjgabpewt@pomail.net')]
 
 # Application definition
 
@@ -53,6 +54,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
 ]
 
 ROOT_URLCONF = 'upkeep.urls'
