@@ -28,7 +28,7 @@ SECRET_KEY = 'r%8uz%ev5_b2&pgzq(4#f2+7#8@gptdir=@hufa5y5c*23njzv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = django_debug
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.upkeepme.co', '.upkeep.brentondurkee.com']
 
 
 # Application definition
